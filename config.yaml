@@ -1,0 +1,31 @@
+bebops:
+  bebop_one:
+    ros_master_port: '11311'
+    gazebo_port: '11411'
+    master_sync_config_file: ${abs_path}/master_sync.yaml
+    beswarm_config:
+      beswarm_config_file: ${abs_path}/beswarm.yaml
+      javanode: applications.parrot.bebop.rats.BebopOne
+      nodename: BeSwarmOne
+      rosparam:
+        takeoff_time_in_secs: 5.0
+        start_flying_time_in_secs: 10.0
+
+  bebop_two:
+    ros_master_port: '11311'
+    gazebo_port: '11411'
+    master_sync_config_file: ${abs_path}/master_sync.yaml
+    beswarm_config:
+      beswarm_config_file: ${abs_path}/beswarm.yaml
+      javanode: applications.parrot.bebop.rats.BebopOne
+      nodename: BeSwarmTwo
+      rosparam:
+        takeoff_time_in_secs: 5.0
+        start_flying_time_in_secs: 10.0
+
+synchronizer:
+  port: '11313'
+  master_sync_config_file: ${abs_path}/master_sync.yaml
+  python_node: Synchronizer.py
+  rosparam:
+    time_sync_topic: ${time_sync_topic}
