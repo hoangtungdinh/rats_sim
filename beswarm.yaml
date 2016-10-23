@@ -1,4 +1,5 @@
 time_sync_topic: ${time_sync_topic}
+virtual_environment_topic: ${virtual_environment_topic}
 
 control_frequency_in_hz: 20.0
 pid_lag_time_in_seconds: 0.1
