@@ -5,7 +5,7 @@ bebops:
     master_sync_config_file: ${abs_path}/master_sync.yaml
     beswarm_config:
       beswarm_config_file: ${abs_path}/beswarm.yaml
-      javanode: applications.parrot.bebop.rats.BebopOne
+      javanode: applications.parrot.tumsim.rats.TumSimOneCircle
       nodename: BeSwarmOne
       rosparam:
         drone_name: drone_one
@@ -18,7 +18,7 @@ bebops:
     master_sync_config_file: ${abs_path}/master_sync.yaml
     beswarm_config:
       beswarm_config_file: ${abs_path}/beswarm.yaml
-      javanode: applications.parrot.bebop.rats.BebopOne
+      javanode: applications.parrot.tumsim.rats.TumSimTwoCircle
       nodename: BeSwarmTwo
       rosparam:
         drone_name: drone_two
