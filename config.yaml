@@ -8,18 +8,20 @@ bebops:
       javanode: applications.parrot.bebop.rats.BebopOne
       nodename: BeSwarmOne
       rosparam:
+        drone_name: drone_one
         takeoff_time_in_secs: 5.0
         start_flying_time_in_secs: 10.0
 
   bebop_two:
-    ros_master_port: '11311'
-    gazebo_port: '11411'
+    ros_master_port: '11312'
+    gazebo_port: '11412'
     master_sync_config_file: ${abs_path}/master_sync.yaml
     beswarm_config:
       beswarm_config_file: ${abs_path}/beswarm.yaml
       javanode: applications.parrot.bebop.rats.BebopOne
       nodename: BeSwarmTwo
       rosparam:
+        drone_name: drone_two
         takeoff_time_in_secs: 5.0
         start_flying_time_in_secs: 10.0
 
