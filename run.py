@@ -127,6 +127,9 @@ def start_single_bebop(tracker, config, log_file_prefix_abs_path):
 
 
 def launch_tum_sim(my_env, log_file_prefix_abs_path, tracker):
+    turn_off_sim_time_cmd = 'rosparam set use_sim_time False'
+    execute_cmd(turn_off_sim_time_cmd, my_env, log_file_prefix_abs_path + '_tum_sim_param', tracker)
+    time.sleep(1)
     launch_tum_sim_cmd = 'roslaunch cvg_sim_gazebo no_gui_ardrone_empty_world.launch'
     execute_cmd(launch_tum_sim_cmd, my_env, log_file_prefix_abs_path + '_launch_tum_sim', tracker)
     time.sleep(5)
