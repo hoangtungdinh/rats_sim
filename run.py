@@ -120,7 +120,7 @@ def start_single_bebop(tracker, config, log_file_prefix_abs_path):
     :type config: dict
     """
     my_env = create_env(config['gazebo_port'], config['ros_master_port'])
-    launch_ros_master(my_env, config['port'], tracker, config['master_sync_config_file'],
+    launch_ros_master(my_env, config['ros_master_port'], tracker, config['master_sync_config_file'],
                       log_file_prefix_abs_path)
     launch_tum_sim(my_env, log_file_prefix_abs_path, tracker)
     launch_beswarm(my_env, tracker, config['beswarm_config'], log_file_prefix_abs_path)
@@ -134,8 +134,8 @@ def launch_tum_sim(my_env, log_file_prefix_abs_path, tracker):
 
 def start_synchronizer(synchronizer_config, tracker, log_file_prefix_abs_path):
     my_env = os.environ.copy()
-    my_env['ROS_MASTER_URI'] = 'http://localhost:' + synchronizer_config['port']
-    launch_ros_master(my_env, synchronizer_config['port'], tracker,
+    my_env['ROS_MASTER_URI'] = 'http://localhost:' + synchronizer_config['ros_master_port']
+    launch_ros_master(my_env, synchronizer_config['ros_master_port'], tracker,
                       synchronizer_config['master_sync_config_file'], log_file_prefix_abs_path)
     set_ros_parameters(my_env, tracker, synchronizer_config['rosparam'],
                        log_file_prefix_abs_path + '_set_rosparam.log')

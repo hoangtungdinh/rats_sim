@@ -26,7 +26,7 @@ bebops:
         start_flying_time_in_secs: 10.0
 
 synchronizer:
-  port: '11313'
+  ros_master_port: '11313'
   master_sync_config_file: ${abs_path}/master_sync.yaml
   python_node: Synchronizer.py
   rosparam:
