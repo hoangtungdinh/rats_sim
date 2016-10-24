@@ -193,7 +193,7 @@ def launch_ros_master(my_env, port, tracker, master_sync_config_file_abs_path,
 
 def create_env(gazebo_port, ros_master_port):
     my_env = os.environ.copy()
-    my_env['GAZEBO_MASTER_URI'] = gazebo_port
+    my_env['GAZEBO_MASTER_URI'] = 'http://localhost:' + gazebo_port
     my_env['ROS_MASTER_URI'] = 'http://localhost:' + ros_master_port
     return my_env
 
