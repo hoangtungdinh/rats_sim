@@ -122,15 +122,17 @@ def start_single_bebop(tracker, config, log_file_prefix_abs_path):
     my_env = create_env(config['gazebo_port'], config['ros_master_port'])
     launch_ros_master(my_env, config['ros_master_port'], tracker, config['master_sync_config_file'],
                       log_file_prefix_abs_path)
-    launch_tum_sim(my_env, log_file_prefix_abs_path, tracker)
+    launch_tum_sim(my_env, config['initial_position'], log_file_prefix_abs_path, tracker)
     launch_beswarm(my_env, tracker, config['beswarm_config'], log_file_prefix_abs_path)
 
 
-def launch_tum_sim(my_env, log_file_prefix_abs_path, tracker):
+def launch_tum_sim(my_env, initial_position, log_file_prefix_abs_path, tracker):
     turn_off_sim_time_cmd = 'rosparam set use_sim_time False'
     execute_cmd(turn_off_sim_time_cmd, my_env, log_file_prefix_abs_path + '_tum_sim_param', tracker)
     time.sleep(1)
-    launch_tum_sim_cmd = 'roslaunch cvg_sim_gazebo no_gui_ardrone_empty_world.launch'
+    launch_tum_sim_cmd = 'roslaunch cvg_sim_gazebo rats_sim.launch x:=' + initial_position[
+        0] + ' y:=' + initial_position[1] + ' z:=' + initial_position[2] + ' yaw:=' + \
+                         initial_position[3]
     execute_cmd(launch_tum_sim_cmd, my_env, log_file_prefix_abs_path + '_launch_tum_sim', tracker)
     time.sleep(5)
 

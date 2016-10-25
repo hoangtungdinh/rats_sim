@@ -3,6 +3,7 @@ bebops:
     ros_master_port: '11311'
     gazebo_port: '11411'
     master_sync_config_file: ${abs_path}/master_sync.yaml
+    initial_position: [1.0, -1, 1.5, 0.0]
     beswarm_config:
       beswarm_config_file: ${abs_path}/beswarm.yaml
       javanode: applications.parrot.tumsim.rats.TumSimOneCircle
@@ -16,6 +17,7 @@ bebops:
     ros_master_port: '11312'
     gazebo_port: '11412'
     master_sync_config_file: ${abs_path}/master_sync.yaml
+    initial_position: [1.0, -3, 1.5, 0.0]
     beswarm_config:
       beswarm_config_file: ${abs_path}/beswarm.yaml
       javanode: applications.parrot.tumsim.rats.TumSimTwoCircle
