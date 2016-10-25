@@ -127,9 +127,9 @@ def start_single_bebop(tracker, config, log_file_prefix_abs_path):
 
 
 def launch_tum_sim(my_env, initial_position, log_file_prefix_abs_path, tracker):
-    launch_tum_sim_cmd = 'roslaunch cvg_sim_gazebo rats_sim.launch x:=' + initial_position[
-        0] + ' y:=' + initial_position[1] + ' z:=' + initial_position[2] + ' yaw:=' + \
-                         initial_position[3]
+    launch_tum_sim_cmd = 'roslaunch cvg_sim_gazebo rats_sim.launch x:=' + str(
+        initial_position[0]) + ' y:=' + str(initial_position[1]) + ' z:=' + str(
+        initial_position[2]) + ' yaw:=' + str(initial_position[3])
     execute_cmd(launch_tum_sim_cmd, my_env, log_file_prefix_abs_path + '_launch_tum_sim', tracker)
     time.sleep(5)
     turn_off_sim_time_cmd = 'rosparam set use_sim_time False'
