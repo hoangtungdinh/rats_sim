@@ -159,8 +159,8 @@ def launch_tum_sim(my_env, initial_position, log_file_prefix_abs_path, tracker, 
 def start_synchronizer(synchronizer_config, tracker, log_file_prefix_abs_path, config_dir):
     my_env = os.environ.copy()
     my_env['ROS_IP'] = '127.0.0.1'
-    my_env['ROS_MASTER_URI'] = 'http://localhost:' + synchronizer_config['port']
-    launch_ros_master(my_env, synchronizer_config['port'], tracker, config_dir,
+    my_env['ROS_MASTER_URI'] = 'http://localhost:' + synchronizer_config['ros_master_port']
+    launch_ros_master(my_env, synchronizer_config['ros_master_port'], tracker, config_dir,
                       log_file_prefix_abs_path)
     set_ros_parameters(my_env, tracker, synchronizer_config['rosparam'],
                        log_file_prefix_abs_path + '_set_rosparam.log')
