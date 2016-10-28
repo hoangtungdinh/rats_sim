@@ -16,16 +16,8 @@ import datetime
 
 
 def start():
-    """
-    Main entrance of the scripts.
-    """
-    main_config_file_name = sys.argv[1]
-    # get the current path of the script
-    current_path = os.path.dirname(os.path.realpath(__file__))
-    # parse the main config file
-    parsed_config_file = parse_yaml_file(current_path + '/' + main_config_file_name)
-    # convert the parsed config file to python dictionary
-    configs = read_yaml_file(parsed_config_file)
+    config_dir = get_config_dir()
+    configs = get_main_config(config_dir)
 
     # the list of all active processes
     tracker = {'processes': [], 'opened_files': []}
@@ -38,19 +30,51 @@ def start():
     log_dir_abs_path = os.path.expanduser(
         '~') + '/run_script_log/' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + '/'
 
-    start_bebops(configs['bebops'], tracker, log_dir_abs_path)
-    start_synchronizer(configs['synchronizer'], tracker, log_dir_abs_path + 'synchronizer')
+    start_bebops(configs['bebops'], tracker, log_dir_abs_path, config_dir)
+    start_synchronizer(configs['synchronizer'], tracker, log_dir_abs_path + 'synchronizer',
+                       config_dir)
 
     # to keep the script alive
     input()
 
 
-def start_bebops(bebop_configs, tracker, log_dir_abs_path):
+def get_main_config(config_dir):
+    config_file = config_dir + '/config.yaml'
+
+    if os.path.isfile(config_file):
+        # parse the main config file
+        parsed_config_file = parse_yaml_file(config_file)
+        # convert the parsed config file to python dictionary
+        configs = read_yaml_file(parsed_config_file)
+        return configs
+    else:
+        print('FILE NOT FOUND: ', config_file)
+        exit()
+
+
+def get_config_dir():
+    try:
+        config_dir = sys.argv[1]
+    except IndexError:
+        print('Please pass the absolute path of the configuration folder')
+        exit()
+
+    if config_dir[-1] == '/':
+        config_dir = config_dir[:-1]
+
+    if os.path.isdir(config_dir):
+        return config_dir
+    else:
+        print(config_dir, ' is not a valid directory')
+        exit()
+
+
+def start_bebops(bebop_configs, tracker, log_dir_abs_path, config_dir):
     # iterate over all bebops
     for bebop, config in bebop_configs.items():
         # start a bebop using her own config
         start_single_bebop(tracker=tracker, config=config,
-                           log_file_prefix_abs_path=log_dir_abs_path + bebop)
+                           log_file_prefix_abs_path=log_dir_abs_path + bebop, config_dir=config_dir)
 
 
 def read_yaml_file(yaml_file):
@@ -81,11 +105,12 @@ def parse_yaml_file(yaml_file):
     content = file.read()
     file.close()
 
+    config_dir = os.path.dirname(yaml_file)
     # replace the absolute path variables
-    content = content.replace('${abs_path}', os.path.dirname(os.path.realpath(__file__)))
+    content = content.replace('${config_dir}', config_dir)
 
     # read all other variables
-    variables = read_yaml_file(os.path.dirname(os.path.realpath(__file__)) + '/variables.yaml')
+    variables = read_yaml_file(config_dir + '/variables.yaml')
 
     # replace all substitution arguments/variables by their values defined in variables.yaml
     for key, value in variables.items():
@@ -111,24 +136,17 @@ def parse_yaml_file(yaml_file):
     return parsed_file
 
 
-def start_single_bebop(tracker, config, log_file_prefix_abs_path):
-    """
-    Starts a single bebop.
-    :param tracker: the list of active processes
-    :type tracker: list
-    :param config: the configuration of the bebop
-    :type config: dict
-    """
+def start_single_bebop(tracker, config, log_file_prefix_abs_path, config_dir):
     my_env = create_env(config['gazebo_port'], config['ros_master_port'])
-    launch_ros_master(my_env, config['ros_master_port'], tracker, config['master_sync_config_file'],
+    launch_ros_master(my_env, config['ros_master_port'], tracker, config_dir,
                       log_file_prefix_abs_path)
-    launch_tum_sim(my_env, config['initial_position'], log_file_prefix_abs_path, tracker)
-    launch_beswarm(my_env, tracker, config['beswarm_config'], log_file_prefix_abs_path)
+    launch_tum_sim(my_env, config['initial_position'], log_file_prefix_abs_path, tracker,
+                   config_dir)
+    launch_beswarm(my_env, tracker, config['beswarm_config'], config_dir, log_file_prefix_abs_path)
 
 
-def launch_tum_sim(my_env, initial_position, log_file_prefix_abs_path, tracker):
-    current_path = os.path.dirname(os.path.realpath(__file__))
-    launch_tum_sim_cmd = 'roslaunch ' + current_path + '/rats_sim.launch x:=' + str(
+def launch_tum_sim(my_env, initial_position, log_file_prefix_abs_path, tracker, config_dir):
+    launch_tum_sim_cmd = 'roslaunch ' + config_dir + '/rats_sim.launch x:=' + str(
         initial_position[0]) + ' y:=' + str(initial_position[1]) + ' z:=' + str(
         initial_position[2]) + ' yaw:=' + str(initial_position[3])
     execute_cmd(launch_tum_sim_cmd, my_env, log_file_prefix_abs_path + '_launch_tum_sim', tracker)
@@ -138,12 +156,12 @@ def launch_tum_sim(my_env, initial_position, log_file_prefix_abs_path, tracker):
     time.sleep(1)
 
 
-def start_synchronizer(synchronizer_config, tracker, log_file_prefix_abs_path):
+def start_synchronizer(synchronizer_config, tracker, log_file_prefix_abs_path, config_dir):
     my_env = os.environ.copy()
     my_env['ROS_IP'] = '127.0.0.1'
-    my_env['ROS_MASTER_URI'] = 'http://localhost:' + synchronizer_config['ros_master_port']
-    launch_ros_master(my_env, synchronizer_config['ros_master_port'], tracker,
-                      synchronizer_config['master_sync_config_file'], log_file_prefix_abs_path)
+    my_env['ROS_MASTER_URI'] = 'http://localhost:' + synchronizer_config['port']
+    launch_ros_master(my_env, synchronizer_config['port'], tracker, config_dir,
+                      log_file_prefix_abs_path)
     set_ros_parameters(my_env, tracker, synchronizer_config['rosparam'],
                        log_file_prefix_abs_path + '_set_rosparam.log')
     synchronizer_launch_cmd = 'rosrun rats ' + synchronizer_config['python_node']
@@ -152,25 +170,33 @@ def start_synchronizer(synchronizer_config, tracker, log_file_prefix_abs_path):
     time.sleep(2)
 
 
-def launch_beswarm(my_env, tracker, beswarm_config, log_file_prefix_abs_path):
-    # delete build script folder
-    build_script_dir = execute_cmd_and_get_output('rospack find rats') + '/BeSwarm/build/scripts'
-    shutil.rmtree(build_script_dir, ignore_errors=True)
-    # parse the beswarm config file and load it to the parameter server
-    parsed_beswarm_config_file = parse_yaml_file(beswarm_config['beswarm_config_file'])
-    load_param_cmd = 'rosparam load ' + parsed_beswarm_config_file
-    execute_cmd(load_param_cmd, my_env, log_file_prefix_abs_path + '_rosparam_load.log', tracker)
-    time.sleep(2)
-    # set some remaining parameters to the parameter server
-    set_ros_parameters(my_env, tracker, beswarm_config['rosparam'],
-                       log_file_prefix_abs_path + '_set_rosparam.log')
-    time.sleep(2)
-    # launch the java node
-    beswarm_launch_cmd = 'rosrun rats BeSwarm ' + beswarm_config['javanode'] + ' __name:=' + \
-                         beswarm_config['nodename']
-    execute_cmd(beswarm_launch_cmd, my_env, log_file_prefix_abs_path + '_launch_beswarm.log',
-                tracker)
-    time.sleep(2)
+def launch_beswarm(my_env, tracker, beswarm_config, config_dir, log_file_prefix_abs_path):
+    beswarm_config_file = config_dir + '/beswarm.yaml'
+
+    if os.path.isfile(beswarm_config_file):
+        # delete build script folder
+        build_script_dir = execute_cmd_and_get_output(
+            'rospack find rats') + '/BeSwarm/build/scripts'
+        shutil.rmtree(build_script_dir, ignore_errors=True)
+        # parse the beswarm config file and load it to the parameter server
+        parsed_beswarm_config_file = parse_yaml_file(beswarm_config_file)
+        load_param_cmd = 'rosparam load ' + parsed_beswarm_config_file
+        execute_cmd(load_param_cmd, my_env, log_file_prefix_abs_path + '_rosparam_load.log',
+                    tracker)
+        time.sleep(2)
+        # set some remaining parameters to the parameter server
+        set_ros_parameters(my_env, tracker, beswarm_config['rosparam'],
+                           log_file_prefix_abs_path + '_set_rosparam.log')
+        time.sleep(2)
+        # launch the java node
+        beswarm_launch_cmd = 'rosrun rats BeSwarm ' + beswarm_config['javanode'] + ' __name:=' + \
+                             beswarm_config['nodename']
+        execute_cmd(beswarm_launch_cmd, my_env, log_file_prefix_abs_path + '_launch_beswarm.log',
+                    tracker)
+        time.sleep(2)
+    else:
+        print('FILE NOT FOUND: ', beswarm_config_file)
+        exit()
 
 
 def set_ros_parameters(my_env, tracker, ros_params, log_file_abs_path):
@@ -179,23 +205,28 @@ def set_ros_parameters(my_env, tracker, ros_params, log_file_abs_path):
         execute_cmd(set_param_cmd, my_env, log_file_abs_path, tracker)
 
 
-def launch_ros_master(my_env, port, tracker, master_sync_config_file_abs_path,
-                      log_file_prefix_abs_path):
-    # start a ros master
-    roscore_cmd = 'roscore -p ' + port
-    execute_cmd(roscore_cmd, my_env, log_file_prefix_abs_path + '_roscore.log', tracker)
-    time.sleep(2)
-    # start master_discovery_fkie (to discover other ros masters)
-    master_discovery_cmd = 'rosrun master_discovery_fkie master_discovery _mcast_group:=224.0.0.1'
-    execute_cmd(master_discovery_cmd, my_env, log_file_prefix_abs_path + '_master_discovery.log',
-                tracker)
-    time.sleep(2)
-    # start master_sync_fkie (to sync with other ros masters
-    parsed_master_sync_config_file = parse_yaml_file(master_sync_config_file_abs_path)
-    sync_cmd = 'rosrun master_sync_fkie master_sync _interface_url:=' + \
-               parsed_master_sync_config_file
-    execute_cmd(sync_cmd, my_env, log_file_prefix_abs_path + '_sync_cmd.log', tracker)
-    time.sleep(2)
+def launch_ros_master(my_env, port, tracker, config_dir, log_file_prefix_abs_path):
+    master_sync_config_file = config_dir + '/master_sync.yaml'
+    if os.path.isfile(master_sync_config_file):
+        # start a ros master
+        roscore_cmd = 'roscore -p ' + port
+        execute_cmd(roscore_cmd, my_env, log_file_prefix_abs_path + '_roscore.log', tracker)
+        time.sleep(2)
+        # start master_discovery_fkie (to discover other ros masters)
+        master_discovery_cmd = 'rosrun master_discovery_fkie master_discovery ' \
+                               '_mcast_group:=224.0.0.1'
+        execute_cmd(master_discovery_cmd, my_env,
+                    log_file_prefix_abs_path + '_master_discovery.log', tracker)
+        time.sleep(2)
+        # start master_sync_fkie (to sync with other ros masters
+        parsed_master_sync_config_file = parse_yaml_file(master_sync_config_file)
+        sync_cmd = 'rosrun master_sync_fkie master_sync _interface_url:=' + \
+                   parsed_master_sync_config_file
+        execute_cmd(sync_cmd, my_env, log_file_prefix_abs_path + '_sync_cmd.log', tracker)
+        time.sleep(2)
+    else:
+        print('FILE NOT FOUND: ', master_sync_config_file)
+        exit()
 
 
 def create_env(gazebo_port, ros_master_port):
