@@ -14,15 +14,14 @@ def start():
     counter = 0
     pdfs = []
     for pose_file in pose_files:
-        dir_path = os.path.dirname(pose_file)
-        drone_name = os.path.relpath(dir_path, log_dir)
+        drone_name = pose_file.split('/')[-2]
 
         out_file = str(counter) + '.pdf'
         visualize(pose_file, drone_name + ' pose', out_file)
         pdfs.append(out_file)
         counter += 1
 
-        velocity_file = find_files('velocity.log', dir_path)[0]
+        velocity_file = pose_file.replace('pose.log', 'velocity.log')
         out_file = str(counter) + '.pdf'
         visualize(velocity_file, drone_name + ' velocity', out_file)
         pdfs.append(out_file)
