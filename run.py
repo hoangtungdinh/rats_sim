@@ -33,6 +33,7 @@ def start():
 
 
 def start_bebops(bebop_configs, tracker, logdir, config_dir):
+    executor.check_unique_integer_id(bebop_configs)
     # iterate over all bebops
     for bebop, config in bebop_configs.items():
         # start a bebop using her own config

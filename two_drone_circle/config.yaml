@@ -7,7 +7,7 @@ bebops:
       javanode: applications.parrot.tumsim.rats.TumSimOneCircle
       nodename: BeSwarmOne
       rosparam:
-        drone_name: drone_one
+        unique_integer_id: 1
         takeoff_time_in_secs: 5.0
         start_flying_time_in_secs: 10.0
 
@@ -19,7 +19,7 @@ bebops:
       javanode: applications.parrot.tumsim.rats.TumSimTwoCircle
       nodename: BeSwarmTwo
       rosparam:
-        drone_name: drone_two
+        unique_integer_id: 2
         takeoff_time_in_secs: 5.0
         start_flying_time_in_secs: 10.0
 
