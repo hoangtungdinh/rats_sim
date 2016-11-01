@@ -1,28 +1,22 @@
-"""
-Scripts to bootstrap a rats show.
-"""
-
-import subprocess
 import os
 import atexit
-import signal
 import time
 
-import shutil
-import yaml
-import glob
-import sys
 import datetime
+
+from SwarmBootstrapUtils import clean_up
+from SwarmBootstrapUtils import configs
+from SwarmBootstrapUtils import executor
 
 
 def start():
-    config_dir = get_config_dir()
-    configs = get_main_config(config_dir)
+    config_dir = configs.get_config_dir()
+    main_config = configs.get_main_config(config_dir)
 
     # the list of all active processes
     tracker = {'processes': [], 'opened_files': []}
     # clean up on exit
-    atexit.register(clean_up, tracker, config_dir)
+    atexit.register(clean_up.clean_up, tracker['processes'], tracker['opened_files'], config_dir)
 
     # here we go
     print('Start the program...')
@@ -30,42 +24,12 @@ def start():
     log_dir = os.path.expanduser('~') + '/log_rats_sim/' + datetime.datetime.now().strftime(
         "%Y-%m-%d-%H-%M-%S")
 
-    start_bebops(configs['bebops'], tracker, log_dir, config_dir)
-    start_synchronizer(configs['synchronizer'], tracker, log_dir + '/synchronizer', config_dir)
+    start_bebops(main_config['bebops'], tracker, log_dir, config_dir)
+    executor.start_synchronizer(main_config['synchronizer'], tracker, log_dir + '/synchronizer',
+                                config_dir)
 
     # to keep the script alive
     input()
-
-
-def get_main_config(config_dir):
-    config_file = config_dir + '/config.yaml'
-
-    if os.path.isfile(config_file):
-        # parse the main config file
-        parsed_config_file = parse_yaml_file(config_file)
-        # convert the parsed config file to python dictionary
-        configs = read_yaml_file(parsed_config_file)
-        return configs
-    else:
-        print('FILE NOT FOUND: ', config_file)
-        exit()
-
-
-def get_config_dir():
-    try:
-        config_dir = sys.argv[1]
-    except IndexError:
-        print('Please pass the absolute path of the configuration folder')
-        exit()
-
-    if config_dir[-1] == '/':
-        config_dir = config_dir[:-1]
-
-    if os.path.isdir(config_dir):
-        return config_dir
-    else:
-        print(config_dir, ' is not a valid directory')
-        exit()
 
 
 def start_bebops(bebop_configs, tracker, logdir, config_dir):
@@ -76,150 +40,22 @@ def start_bebops(bebop_configs, tracker, logdir, config_dir):
                            config_dir=config_dir)
 
 
-def read_yaml_file(yaml_file):
-    """
-    Reads a yaml file and translate it to a python dictionary.
-    :param yaml_file: the absolute directory of the yaml file to be read
-    :type yaml_file: str
-    :return: the python dictionary representing the content of the yaml file
-    :rtype: dict
-    """
-    with open(yaml_file, 'r') as stream:
-        try:
-            return yaml.load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-
-
-def parse_yaml_file(yaml_file):
-    """
-    Parses a yaml file. A new temporary yaml file will be generated based on the input file with
-    all the substitution arguments replaced by their values.
-    :param yaml_file: the absolute directory of the yaml file to be parsed
-    :type yaml_file: str
-    :return: the absolute directory of the new temporary yaml file
-    :rtype: str
-    """
-    file = open(yaml_file, 'r')
-    content = file.read()
-    file.close()
-
-    config_dir = os.path.dirname(yaml_file)
-    # replace the absolute path variables
-    content = content.replace('${config_dir}', config_dir)
-
-    # read all other variables
-    variables = read_yaml_file(config_dir + '/variables.yaml')
-
-    # replace all substitution arguments/variables by their values defined in variables.yaml
-    for key, value in variables.items():
-        content = content.replace('${' + key + '}', value)
-
-    # check if there is any substitution argument not being defined in variables.yaml
-    index = content.find('${')
-    if index != -1:
-        print('Cannot parse ' + yaml_file + '. Variable ' + content[index:content.find(
-            '}') + 1] + ' is not defined in variables.yaml.')
-        # if such variable exists, exit immediately
-        exit()
-
-    # the absolute directory of the temporary file
-    parsed_file = yaml_file.replace('.yaml', '_tmp.yaml')
-
-    # write the temporary file to disk
-    tmp_file = open(parsed_file, 'w')
-    tmp_file.write(content)
-    tmp_file.close()
-
-    # return the absolute directory of the temporary file
-    return parsed_file
-
-
 def start_single_bebop(tracker, config, log_dir, config_dir):
     my_env = create_env(config['gazebo_port'], config['ros_master_port'])
-    launch_ros_master(my_env, config['ros_master_port'], tracker, config_dir, log_dir)
+    executor.launch_ros_master(my_env, config['ros_master_port'], tracker, config_dir, log_dir)
     launch_tum_sim(my_env, config['initial_position'], log_dir, tracker, config_dir)
-    launch_beswarm(my_env, tracker, config['beswarm_config'], config_dir, log_dir)
+    executor.launch_beswarm(my_env, tracker, config['beswarm_config'], config_dir, log_dir)
 
 
 def launch_tum_sim(my_env, initial_position, log_dir, tracker, config_dir):
     launch_tum_sim_cmd = 'roslaunch ' + config_dir + '/rats_sim.launch x:=' + str(
         initial_position[0]) + ' y:=' + str(initial_position[1]) + ' z:=' + str(
         initial_position[2]) + ' yaw:=' + str(initial_position[3])
-    execute_cmd(launch_tum_sim_cmd, my_env, log_dir + '/launch_tum_sim.log', tracker)
+    executor.execute_cmd(launch_tum_sim_cmd, my_env, log_dir + '/launch_tum_sim.log', tracker)
     time.sleep(5)
     turn_off_sim_time_cmd = 'rosparam set use_sim_time False'
-    execute_cmd(turn_off_sim_time_cmd, my_env, log_dir + '/turn_off_sim_time.log', tracker)
+    executor.execute_cmd(turn_off_sim_time_cmd, my_env, log_dir + '/turn_off_sim_time.log', tracker)
     time.sleep(1)
-
-
-def start_synchronizer(synchronizer_config, tracker, log_dir, config_dir):
-    my_env = os.environ.copy()
-    my_env['ROS_IP'] = '127.0.0.1'
-    my_env['ROS_MASTER_URI'] = 'http://localhost:' + synchronizer_config['ros_master_port']
-    launch_ros_master(my_env, synchronizer_config['ros_master_port'], tracker, config_dir, log_dir)
-    set_ros_parameters(my_env, tracker, synchronizer_config['rosparam'], log_dir)
-    synchronizer_launch_cmd = 'rosrun rats ' + synchronizer_config['python_node']
-    execute_cmd(synchronizer_launch_cmd, my_env, log_dir + '/launch_synchronizer.log', tracker)
-    time.sleep(2)
-
-
-def launch_beswarm(my_env, tracker, beswarm_config, config_dir, log_dir):
-    beswarm_config_file = config_dir + '/beswarm.yaml'
-    my_env['LOG_DIR'] = log_dir
-
-    if os.path.isfile(beswarm_config_file):
-        # delete build script folder
-        build_script_dir = execute_cmd_and_get_output(
-            'rospack find rats') + '/BeSwarm/build/scripts'
-        shutil.rmtree(build_script_dir, ignore_errors=True)
-        # parse the beswarm config file and load it to the parameter server
-        parsed_beswarm_config_file = parse_yaml_file(beswarm_config_file)
-        load_param_cmd = 'rosparam load ' + parsed_beswarm_config_file
-        execute_cmd(load_param_cmd, my_env, log_dir + '/rosparam_load.log', tracker)
-        time.sleep(2)
-        # set some remaining parameters to the parameter server
-        set_ros_parameters(my_env, tracker, beswarm_config['rosparam'],
-                           log_dir + '/set_rosparam.log')
-        time.sleep(2)
-        # launch the java node
-        beswarm_launch_cmd = 'rosrun rats BeSwarm ' + beswarm_config['javanode'] + ' __name:=' + \
-                             beswarm_config['nodename']
-        execute_cmd(beswarm_launch_cmd, my_env, log_dir + '/launch_beswarm.log', tracker)
-        time.sleep(2)
-    else:
-        print('FILE NOT FOUND: ', beswarm_config_file)
-        exit()
-
-
-def set_ros_parameters(my_env, tracker, ros_params, log_dir):
-    log_file = log_dir + '/set_rosparam.log'
-    for key, value in ros_params.items():
-        set_param_cmd = 'rosparam set ' + str(key) + ' ' + str(value)
-        execute_cmd(set_param_cmd, my_env, log_file, tracker)
-
-
-def launch_ros_master(my_env, port, tracker, config_dir, log_dir):
-    master_sync_config_file = config_dir + '/master_sync.yaml'
-    if os.path.isfile(master_sync_config_file):
-        # start a ros master
-        roscore_cmd = 'roscore -p ' + port
-        execute_cmd(roscore_cmd, my_env, log_dir + '/roscore.log', tracker)
-        time.sleep(2)
-        # start master_discovery_fkie (to discover other ros masters)
-        master_discovery_cmd = 'rosrun master_discovery_fkie master_discovery ' \
-                               '_mcast_group:=224.0.0.1'
-        execute_cmd(master_discovery_cmd, my_env, log_dir + '/master_discovery.log', tracker)
-        time.sleep(2)
-        # start master_sync_fkie (to sync with other ros masters
-        parsed_master_sync_config_file = parse_yaml_file(master_sync_config_file)
-        sync_cmd = 'rosrun master_sync_fkie master_sync _interface_url:=' + \
-                   parsed_master_sync_config_file
-        execute_cmd(sync_cmd, my_env, log_dir + '/sync_cmd.log', tracker)
-        time.sleep(2)
-    else:
-        print('FILE NOT FOUND: ', master_sync_config_file)
-        exit()
 
 
 def create_env(gazebo_port, ros_master_port):
@@ -228,56 +64,6 @@ def create_env(gazebo_port, ros_master_port):
     my_env['GAZEBO_MASTER_URI'] = 'http://localhost:' + gazebo_port
     my_env['ROS_MASTER_URI'] = 'http://localhost:' + ros_master_port
     return my_env
-
-
-def clean_up(tracker, config_dir):
-    # remove all generated tmp files
-    remove_tmp_files(config_dir)
-    # terminate all processes
-    terminate_all_processes(tracker['processes'])
-    close_all_opened_files(tracker['opened_files'])
-
-
-def terminate_all_processes(processes):
-    """
-    Terminates all processes.
-    :param processes: the list of active processes
-    :type processes: list
-    """
-    for p in processes:
-        try:
-            os.killpg(os.getpgid(p.pid), signal.SIGINT)
-        except KeyboardInterrupt:
-            pass
-    print('cleaned up')
-
-
-def close_all_opened_files(opened_files):
-    for f in opened_files:
-        f.flush()
-        f.close()
-
-
-def remove_tmp_files(config_dir):
-    """
-    Removes all generated tmp files.
-    """
-    for file_name in glob.glob(config_dir + '/*_tmp.yaml'):
-        os.remove(file_name)
-
-
-def execute_cmd(cmd, my_env, log_file, tracker):
-    print(cmd)
-    os.makedirs(os.path.dirname(log_file), exist_ok=True)
-    log_file = open(log_file, 'a+')
-    tracker['processes'].append(
-        subprocess.Popen(cmd.split(), env=my_env, stdout=log_file, stderr=subprocess.STDOUT))
-    tracker['opened_files'].append(log_file)
-
-
-def execute_cmd_and_get_output(cmd):
-    print(cmd)
-    return subprocess.check_output(cmd.split()).decode("utf-8").replace('\n', '')
 
 
 if __name__ == '__main__':

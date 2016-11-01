@@ -116,7 +116,7 @@ def get_dir():
     try:
         config_dir = sys.argv[1]
     except IndexError:
-        print('Please pass the absolute path of the configuration folder')
+        print('Please pass the absolute path of the log folder')
         exit()
 
     if config_dir[-1] == '/':
