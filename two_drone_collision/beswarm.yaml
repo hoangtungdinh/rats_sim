@@ -1,0 +1,21 @@
+time_sync_topic: ${time_sync_topic}
+virtual_environment_topic: ${virtual_environment_topic}
+
+control_frequency_in_hz: 20.0
+pid_lag_time_in_seconds: 0.1
+
+pid_linear_x_kp: 2.0
+pid_linear_x_kd: 1.0
+pid_linear_x_ki: 0.0
+
+pid_linear_y_kp: 2.0
+pid_linear_y_kd: 1.0
+pid_linear_y_ki: 0.0
+
+pid_linear_z_kp: 2.0
+pid_linear_z_kd: 1.0
+pid_linear_z_ki: 0.0
+
+pid_angular_z_kp: 1.5
+pid_angular_z_kd: 0.75
+pid_angular_z_ki: 0.0
