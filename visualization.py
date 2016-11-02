@@ -27,7 +27,7 @@ def start():
         pdfs.append(out_file)
         counter += 1
 
-    merge_pdfs(pdfs, 'result.pdf')
+    merge_pdfs(pdfs, log_dir + '/visualization.pdf')
 
 
 def visualize(file_name, figure_name, output_file_name):
