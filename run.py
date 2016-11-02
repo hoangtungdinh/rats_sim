@@ -10,7 +10,7 @@ from SwarmBootstrapUtils import executor
 
 
 def start():
-    log_dir = os.path.expanduser('~') + '/log_rats/' + datetime.datetime.now().strftime(
+    log_dir = os.path.expanduser('~') + '/log_rats_sim/' + datetime.datetime.now().strftime(
         "%Y-%m-%d-%H-%M-%S")
 
     config_dir = configs.get_config_dir()
@@ -24,9 +24,6 @@ def start():
 
     # here we go
     print('Start the program...')
-
-    log_dir = os.path.expanduser('~') + '/log_rats_sim/' + datetime.datetime.now().strftime(
-        "%Y-%m-%d-%H-%M-%S")
 
     start_bebops(main_config['bebops'], tracker, log_dir, config_dir)
     executor.start_synchronizer(main_config['synchronizer'], tracker, log_dir + '/synchronizer',
