@@ -31,7 +31,7 @@ bebops:
       javanode: applications.parrot.tumsim.rats.swarmview.JulietSwarmView
       nodename: BeSwarmTwo
       rosparam:
-        unique_integer_id: 2
+        unique_integer_id: 3
         takeoff_time_in_secs: 5.0
         start_flying_time_in_secs: 10.0
 
@@ -43,7 +43,7 @@ bebops:
       javanode: applications.parrot.tumsim.rats.swarmview.NerveSwarmView
       nodename: BeSwarmTwo
       rosparam:
-        unique_integer_id: 2
+        unique_integer_id: 4
         takeoff_time_in_secs: 5.0
         start_flying_time_in_secs: 10.0
 
@@ -56,7 +56,7 @@ bebops:
       javanode: applications.parrot.tumsim.rats.swarmview.RomeoSwarmView
       nodename: BeSwarmTwo
       rosparam:
-        unique_integer_id: 2
+        unique_integer_id: 5
         takeoff_time_in_secs: 5.0
         start_flying_time_in_secs: 10.0
 
