@@ -5,7 +5,7 @@ bebops:
     initial_position: [7.0, 3.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.DumboSwarmView
-      nodename: BeSwarmOne
+      nodename: BeSwarmDumbo
       rosparam:
         unique_integer_id: 1
         takeoff_time_in_secs: 5.0
@@ -17,7 +17,7 @@ bebops:
     initial_position: [1.0, 6.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.FievelSwarmView
-      nodename: BeSwarmTwo
+      nodename: BeSwarmFievel
       rosparam:
         unique_integer_id: 2
         takeoff_time_in_secs: 5.0
@@ -29,7 +29,7 @@ bebops:
     initial_position: [1.0, 5.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.JulietSwarmView
-      nodename: BeSwarmTwo
+      nodename: BeSwarmJuliet
       rosparam:
         unique_integer_id: 3
         takeoff_time_in_secs: 5.0
@@ -41,12 +41,11 @@ bebops:
     initial_position: [7.0, 6.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.NerveSwarmView
-      nodename: BeSwarmTwo
+      nodename: BeSwarmNerve
       rosparam:
         unique_integer_id: 4
         takeoff_time_in_secs: 5.0
         start_flying_time_in_secs: 10.0
-
 
   Romeo:
     ros_master_port: '11315'
@@ -54,7 +53,7 @@ bebops:
     initial_position: [7.0, 5.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.RomeoSwarmView
-      nodename: BeSwarmTwo
+      nodename: BeSwarmRomeo
       rosparam:
         unique_integer_id: 5
         takeoff_time_in_secs: 5.0
