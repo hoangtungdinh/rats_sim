@@ -4,7 +4,7 @@ bebops:
     gazebo_port: '11321'
     initial_position: [7.0, 3.0, 1.0, 0.0]
     beswarm_config:
-      javanode: io.github.hoangtungdinh.operationaltest.ratsflight.theater.swarmview.DumboSwarmView
+      javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.DumboSwarmView
       nodename: BeSwarmOne
       rosparam:
         unique_integer_id: 1
@@ -16,7 +16,7 @@ bebops:
     gazebo_port: '11322'
     initial_position: [1.0, 6.0, 1.0, 0.0]
     beswarm_config:
-      javanode: io.github.hoangtungdinh.operationaltest.ratsflight.theater.swarmview.FievelSwarmView
+      javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.FievelSwarmView
       nodename: BeSwarmTwo
       rosparam:
         unique_integer_id: 2
@@ -28,7 +28,7 @@ bebops:
     gazebo_port: '11323'
     initial_position: [1.0, 5.0, 1.0, 0.0]
     beswarm_config:
-      javanode: io.github.hoangtungdinh.operationaltest.ratsflight.theater.swarmview.JulietSwarmView
+      javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.JulietSwarmView
       nodename: BeSwarmTwo
       rosparam:
         unique_integer_id: 3
@@ -40,7 +40,7 @@ bebops:
     gazebo_port: '11324'
     initial_position: [7.0, 6.0, 1.0, 0.0]
     beswarm_config:
-      javanode: io.github.hoangtungdinh.operationaltest.ratsflight.theater.swarmview.NerveSwarmView
+      javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.NerveSwarmView
       nodename: BeSwarmTwo
       rosparam:
         unique_integer_id: 4
@@ -53,7 +53,7 @@ bebops:
     gazebo_port: '11325'
     initial_position: [7.0, 5.0, 1.0, 0.0]
     beswarm_config:
-      javanode: io.github.hoangtungdinh.operationaltest.ratsflight.theater.swarmview.RomeoSwarmView
+      javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.RomeoSwarmView
       nodename: BeSwarmTwo
       rosparam:
         unique_integer_id: 5
