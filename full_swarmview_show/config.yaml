@@ -2,7 +2,7 @@ bebops:
   Dumbo:
     ros_master_port: '11311'
     gazebo_port: '11321'
-    initial_position: [7.0, 3.0, 1.0, 0.0]
+    initial_position: [7.0, -3.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.DumboSwarmView
       nodename: BeSwarmDumbo
@@ -14,7 +14,7 @@ bebops:
   Fievel:
     ros_master_port: '11312'
     gazebo_port: '11322'
-    initial_position: [1.0, 6.0, 1.0, 0.0]
+    initial_position: [1.0, -6.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.FievelSwarmView
       nodename: BeSwarmFievel
@@ -26,7 +26,7 @@ bebops:
   Juliet:
     ros_master_port: '11313'
     gazebo_port: '11323'
-    initial_position: [1.0, 5.0, 1.0, 0.0]
+    initial_position: [1.0, -5.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.JulietSwarmView
       nodename: BeSwarmJuliet
@@ -38,7 +38,7 @@ bebops:
   Nerve:
     ros_master_port: '11314'
     gazebo_port: '11324'
-    initial_position: [7.0, 6.0, 1.0, 0.0]
+    initial_position: [7.0, -6.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.NerveSwarmView
       nodename: BeSwarmNerve
@@ -50,7 +50,7 @@ bebops:
   Romeo:
     ros_master_port: '11315'
     gazebo_port: '11325'
-    initial_position: [7.0, 5.0, 1.0, 0.0]
+    initial_position: [7.0, -5.0, 1.0, 0.0]
     beswarm_config:
       javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.swarmview.RomeoSwarmView
       nodename: BeSwarmRomeo
