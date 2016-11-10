@@ -78,10 +78,10 @@ def generate_pdf(x_plot, y_plot, yaw_plot, z_plot, output_file_name):
 
 
 def save_pdfs(x_plot, y_plot, z_plot, yaw_plot):
-    x_plot.save('x_plot.pdf')
-    y_plot.save('y_plot.pdf')
-    z_plot.save('z_plot.pdf')
-    yaw_plot.save('yaw_plot.pdf')
+    x_plot.save('x_plot.pdf', width=20, height=5)
+    y_plot.save('y_plot.pdf', width=20, height=5)
+    z_plot.save('z_plot.pdf', width=20, height=5)
+    yaw_plot.save('yaw_plot.pdf', width=20, height=5)
     pdfs = ['x_plot.pdf', 'y_plot.pdf', 'z_plot.pdf', 'yaw_plot.pdf']
     return pdfs
 
