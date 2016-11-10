@@ -35,6 +35,9 @@ def visualize(file_name, figure_name, output_file_name):
                        names=['time', 'x', 'y', 'z', 'yaw', 'desired x', 'desired y', 'desired z',
                               'desired yaw'], delim_whitespace=True)
 
+    start_time = df['time'].min()
+    df['time'] = df['time'] - start_time
+
     x_plot = get_ggplot_object(df, ['x', 'desired x'], figure_name)
     y_plot = get_ggplot_object(df, ['y', 'desired y'], figure_name)
     z_plot = get_ggplot_object(df, ['z', 'desired z'], figure_name)
