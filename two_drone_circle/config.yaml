@@ -4,7 +4,7 @@ bebops:
     gazebo_port: '11321'
     initial_position: [1.0, -1, 1.5, 0.0]
     beswarm_config:
-      javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.TumSimOneCircle
+      javanode: io.github.hoangtungdinh.beswarm.applications.parrot.tumsim.rats.TumSimOneCircle
       nodename: BeSwarmOne
       rosparam:
         unique_integer_id: 1
@@ -16,7 +16,7 @@ bebops:
     gazebo_port: '11322'
     initial_position: [1.0, -3, 1.5, 0.0]
     beswarm_config:
-      javanode: io.github.hoangtungdinh.applications.parrot.tumsim.rats.TumSimTwoCircle
+      javanode: io.github.hoangtungdinh.beswarm.applications.parrot.tumsim.rats.TumSimTwoCircle
       nodename: BeSwarmTwo
       rosparam:
         unique_integer_id: 2
