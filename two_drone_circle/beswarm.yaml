@@ -15,5 +15,5 @@ pid_velocity_z_kd: 0.1
 
 pid_velocity_yaw_kp: 0.9
 
-pid_acceleration_x_kp: 1.0
-pid_acceleration_y_kp: 1.0
+pid_acceleration_x_kp: 15.0
+pid_acceleration_y_kp: 15.0
