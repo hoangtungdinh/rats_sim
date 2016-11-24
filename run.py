@@ -26,8 +26,9 @@ def start():
     print('Start the program...')
 
     start_bebops(main_config['bebops'], tracker, log_dir, config_dir)
-    executor.start_synchronizer(main_config['synchronizer'], tracker, log_dir + '/synchronizer',
-                                config_dir)
+    if 'synchronizer' in main_config:
+        executor.start_synchronizer(main_config['synchronizer'], tracker, log_dir + '/synchronizer',
+                                    config_dir)
 
     # to keep the script alive
     input()
