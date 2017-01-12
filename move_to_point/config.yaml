@@ -1,0 +1,40 @@
+bebops:
+  bebop_one:
+    ros_master_port: '11311'
+    gazebo_port: '11321'
+    initial_position: [0.0, 0.0, 1.5, 0.0]
+    beswarm_config:
+      javanode: io.github.hoangtungdinh.beswarm.applications.parrot.tumsim.rats.TumSimFlightToPoint
+      nodename: BeSwarmOne
+      rosparam:
+        unique_integer_id: 1
+        takeoff_time_in_secs: 5.0
+        start_flying_time_in_secs: 10.0
+        pos_x: 3.0
+        pos_y: 0.0
+        pos_z: 1.5
+        pos_yaw: 0.0
+        duration: 10.0
+
+  bebop_two:
+    ros_master_port: '11312'
+    gazebo_port: '11322'
+    initial_position: [3.0, 0.5, 1.5, 0.0]
+    beswarm_config:
+      javanode: io.github.hoangtungdinh.beswarm.applications.parrot.tumsim.rats.TumSimFlightToPoint
+      nodename: BeSwarmTwo
+      rosparam:
+        unique_integer_id: 2
+        takeoff_time_in_secs: 5.0
+        start_flying_time_in_secs: 10.0
+        pos_x: 0.0
+        pos_y: 0.5
+        pos_z: 1.5
+        pos_yaw: 0.0
+        duration: 10.0
+
+synchronizer:
+  ros_master_port: '11313'
+  python_node: Synchronizer.py
+  rosparam:
+    time_sync_topic: ${time_sync_topic}
