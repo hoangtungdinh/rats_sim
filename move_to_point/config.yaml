@@ -4,7 +4,7 @@ bebops:
     gazebo_port: '11321'
     initial_position: [0.0, 0.0, 1.5, 0.0]
     beswarm_config:
-      javanode: io.github.hoangtungdinh.beswarm.applications.parrot.tumsim.rats.TumSimFlightToPoint
+      javanode: io.github.hoangtungdinh.beswarm.applications.parrot.tumsim.rats.TumSimCollisionExperiment
       nodename: BeSwarmOne
       rosparam:
         unique_integer_id: 1
@@ -25,7 +25,7 @@ bebops:
     gazebo_port: '11322'
     initial_position: [10.0, 0.5, 1.5, 0.0]
     beswarm_config:
-      javanode: io.github.hoangtungdinh.beswarm.applications.parrot.tumsim.rats.TumSimFlightToPoint
+      javanode: io.github.hoangtungdinh.beswarm.applications.parrot.tumsim.rats.TumSimCollisionExperiment
       nodename: BeSwarmTwo
       rosparam:
         unique_integer_id: 2
