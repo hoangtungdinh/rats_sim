@@ -18,7 +18,8 @@ bebops:
         final_pos_y: 0.0
         final_pos_z: 1.5
         final_pos_yaw: 0.0
-        velocity: 2.0
+        velocity: 1.0
+        localization_deviation: 0.5
 
   bebop_two:
     ros_master_port: '11312'
@@ -39,7 +40,8 @@ bebops:
         final_pos_y: 0.5
         final_pos_z: 1.5
         final_pos_yaw: 0.0
-        velocity: 2.0
+        velocity: 1.0
+        localization_deviation: 0.5
 
 synchronizer:
   ros_master_port: '11313'
