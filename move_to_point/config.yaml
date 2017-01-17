@@ -19,7 +19,7 @@ bebops:
         final_pos_z: 1.5
         final_pos_yaw: 0.0
         velocity: 1.0
-        localization_deviation: 0.5
+        localization_deviation: 0.0
         max_acceleration: '[3.0,3.0,3.0]'
 
   bebop_two:
@@ -42,7 +42,7 @@ bebops:
         final_pos_z: 1.5
         final_pos_yaw: 0.0
         velocity: 1.0
-        localization_deviation: 0.5
+        localization_deviation: 0.0
         max_acceleration: '[3.0,3.0,3.0]'
 
 synchronizer:
