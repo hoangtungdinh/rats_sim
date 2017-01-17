@@ -20,7 +20,7 @@ bebops:
         final_pos_yaw: 0.0
         velocity: 1.0
         localization_deviation: 0.5
-        max_acceleration: [3.0, 3.0, 3.0]
+        max_acceleration: '[3.0,3.0,3.0]'
 
   bebop_two:
     ros_master_port: '11312'
@@ -43,7 +43,7 @@ bebops:
         final_pos_yaw: 0.0
         velocity: 1.0
         localization_deviation: 0.5
-        max_acceleration: [3.0, 3.0, 3.0]
+        max_acceleration: '[3.0,3.0,3.0]'
 
 synchronizer:
   ros_master_port: '11313'
