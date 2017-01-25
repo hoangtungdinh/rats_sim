@@ -2,7 +2,7 @@ bebops:
   bebop_one:
     ros_master_port: '11311'
     gazebo_port: '11321'
-    initial_position: [3.0,1.0,1.5,-3.14]
+    initial_position: [3.0,1.0,0.0,-3.14]
     beswarm_config:
       javanode: io.github.hoangtungdinh.beswarm.applications.parrot.tumsim.rats.TumSimGeofenceExperiment
       nodename: BeSwarmOne
@@ -14,7 +14,7 @@ bebops:
         end_pose: '[3.0,-3.0,1.5,-3.14]'
         velocity: 1.0
         localization_deviation: 0.0
-        max_acceleration: '[3.0,3.0,3.0]'
+        max_acceleration: '[1.0,1.0,1.0]'
 
 synchronizer:
   ros_master_port: '11313'
